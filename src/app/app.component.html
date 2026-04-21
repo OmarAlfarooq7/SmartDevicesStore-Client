@@ -1,0 +1,151 @@
+<!-- الشريط العلوي -->
+<nav
+  class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top border-bottom border-primary border-opacity-25">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand fw-bold text-uppercase d-flex align-items-center" href="#">
+      <i class="bi bi-cpu-fill me-2 text-primary fs-3"></i>
+      <span class="tracking-wider">عالم التقنية | TechVerse</span>
+    </a>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="position-relative pointer me-2" data-bs-toggle="offcanvas" data-bs-target="#cartSidebar">
+        <i class="bi bi-bag-check-fill fs-3 text-primary"></i>
+        <span *ngIf="(cart.cartCount$ | async) as count"
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light shadow-sm"
+          style="font-size: 0.7rem;">
+          {{ count }}
+        </span>
+      </div>
+
+      <button
+        class="btn btn-outline-primary border-2 rounded-circle p-1 d-flex align-items-center justify-content-center"
+        style="width: 42px; height: 42px;" data-bs-toggle="modal" data-bs-target="#userModal">
+        <i class="bi bi-person-fill fs-4"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- المحتوى -->
+<div class="container mt-5">
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <h2 class="fw-bold text-dark mb-2"> إكتشف أحدث الأجهزة الذكية </h2>
+      <div class="mx-auto bg-primary" style="height: 4px; width: 40px; border-radius: 2px;"></div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center mb-5 overflow-auto py-3 px-1 gap-3 custom-scrollbar">
+    <button *ngFor="let cat of categories" (click)="selectCategory(cat.id)"
+      [class.active-tab]="selectedCategoryId === cat.id"
+      class="btn category-tab d-flex align-items-center gap-2 shadow-sm">
+      <i class="bi bi-grid-fill small"></i>
+      {{ cat.name }}
+      <span class="badge rounded-pill bg-light text-primary border ms-1">{{ cat.products.length }}</span>
+    </button>
+  </div>
+
+  <div *ngFor="let cat of categories">
+    <div class="row g-4 justify-content-center" *ngIf="selectedCategoryId === cat.id">
+      <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let prod of cat.products">
+        <div class="card h-100 modern-card shadow-sm">
+          <div class="position-relative overflow-hidden">
+            <img [src]="prod.imageUrl" class="card-img-top product-img" [alt]="prod.name">
+            <div class="price-tag shadow-sm">${{ prod.price }}</div>
+          </div>
+          <div class="card-body p-4 d-flex flex-column">
+            <h6 class="fw-bold text-dark mb-2 text-truncate">{{ prod.name }}</h6>
+            <p class="text-muted extra-small mb-4" style="min-height: 35px;">{{ prod.description }}</p>
+            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+              <div class="text-secondary small">
+                <i class="bi bi-box-seam me-1"></i> {{ prod.stockQuantity }}
+              </div>
+              <button (click)="addToCart(prod)"
+                class="btn btn-primary rounded-pill px-3 py-1 btn-sm fw-bold shadow-sm hover-scale">
+                <i class="bi bi-cart-plus me-1"></i> إضافةإلى السلٍة
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- سلة المشتريات -->
+<div class="offcanvas offcanvas-start shadow" tabindex="-1" id="cartSidebar">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title fw-bold">سلة المشتريات</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div *ngIf="cart.getItems().length === 0" class="text-center mt-5">
+      <i class="bi bi-cart-x display-1 text-muted"></i>
+      <p class="mt-3 text-muted">السلة فارغة</p>
+    </div>
+
+    <div *ngFor="let item of cart.getItems()" class="d-flex align-items-center mb-3 p-2 bg-light rounded-3">
+      <img [src]="item.imageUrl" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+      <div class="ms-3 flex-grow-1">
+        <h6 class="mb-0 fw-bold small text-truncate">{{ item.name }}</h6>
+        <div class="text-primary fw-bold small">${{ item.price }} × {{ item.quantity }}</div>
+      </div>
+      <button (click)="confirmDelete(item.id, item.name)" class="btn btn-sm text-danger hover-scale">
+        <i class="bi bi-trash3-fill"></i>
+      </button>
+    </div>
+  </div>
+  <div class="offcanvas-footer p-4 border-top" *ngIf="cart.getItems().length > 0">
+    <div class="d-flex justify-content-between mb-3">
+      <span class="fw-bold">الإجمالي:</span>
+      <span class="fw-bold text-primary fs-5">${{ cart.getTotalPrice() }}</span>
+    </div>
+    <button (click)="checkout()" class="btn btn-primary w-100 rounded-pill py-3 fw-bold">
+      إتمام الطلب
+    </button>
+  </div>
+</div>
+
+<!-- زر السلة العائم -->
+<div
+  class="fixed-cart-btn shadow-lg d-flex align-items-center justify-content-center pointer animate__animated animate__bounceIn"
+  (click)="toggleCart()" data-bs-toggle="offcanvas" data-bs-target="#cartSidebar">
+  <i class="bi bi-cart-fill fs-3 text-white"></i>
+  <span *ngIf="(cart.cartCount$ | async) as count"
+    class="cart-badge-floating animate__animated animate__heartBeat animate__infinite">
+    {{ count }}
+  </span>
+</div>
+
+<!-- رسالة نجاح الاضافة الى السلة -->
+<div *ngIf="showSuccessMessage" class="position-fixed bottom-0 start-0 mb-5 ms-4 animate__animated animate__fadeInLeft"
+  style="z-index: 9999;">
+  <div class="bg-success text-white px-4 py-2 rounded-pill shadow-lg d-flex align-items-center gap-2">
+    <i class="bi bi-check-circle-fill"></i>
+    <span class="small fw-bold">تمت الإضافة بنجاح!</span>
+  </div>
+</div>
+
+<!-- مودل حساب المستخدم -->
+<div class="modal fade" id="userModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-bottom">
+    <div class="modal-content modal-content-round">
+      <div class="modal-header border-0 justify-content-center pt-3 pb-0">
+        <div class="pull-bar"></div>
+      </div>
+      <div class="modal-body p-5 text-center">
+        <div class="mb-4 text-primary">
+          <i class="bi bi-person-circle display-1"></i>
+        </div>
+        <h4 class="fw-bold mb-2">أهلاً وسهلا بك</h4>
+        <div class="d-grid gap-3 mt-4">
+          <button class="btn btn-outline-dark btn-lg rounded-pill fw-bold">تسجيل الدخول</button>
+          <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">إنشاء حساب جديد</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- تطبيق مبدا SPA -->
+<router-outlet></router-outlet>
