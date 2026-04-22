@@ -212,3 +212,31 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+
+/* تنسيقات خاصة للجوال فقط */
+@media (max-width: 768px) {
+  .modern-card {
+    margin-bottom: 20px;
+    border-radius: 18px; /* زوايا أصغر قليلاً لتناسب الجوال */
+  }
+
+  .modern-card .product-img {
+    height: 160px; /* تصغير ارتفاع الصورة في الجوال */
+  }
+
+  .modern-card .card-title {
+    font-size: 0.95rem; /* تصغير الخط */
+  }
+
+  .modern-card .card-text {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 1; /* سطر واحد فقط للوصف في الجوال */
+  }
+
+  /* إذا أردت ظهور كرتين بجانب بعض في الجوال */
+  .row > [class*='col-'] {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
