@@ -2,7 +2,7 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-/* المتغيرات العامة */
+/* المتغيرات العامة للموقع - Deep Tech Theme */
 :root {
   --primary-color: #0d6efd;
   --dark-navy: #1e293b;
@@ -19,7 +19,7 @@ body {
   overflow-x: hidden;
 }
 
-/* --- التبويبات الأفقية (Category Tabs) --- */
+/* --- تنسيق التبويبات الأفقية (Category Tabs) --- */
 .category-tab {
   background: #ffffff;
   color: #64748b;
@@ -51,16 +51,15 @@ body {
   display: flex;
   overflow-x: auto;
   gap: 10px;
-  padding: 10px 0;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-/* --- كروت المنتجات (Modern Cards) --- */
+/* --- تنسيق كروت المنتجات (Modern Cards) --- */
 .modern-card {
-  height: 100%;
+  height: 100%; /* توحيد الارتفاع */
   display: flex;
   flex-direction: column;
   border-radius: 24px;
@@ -69,48 +68,36 @@ body {
   border: none;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .modern-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-10px);
   box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12) !important;
-}
-
-/* حاوية الصورة الذكية */
-.img-container {
-  width: 100%;
-  aspect-ratio: 16 / 11; /* نسبة ذهبية تناسب الكمبيوتر والجوال */
-  overflow: hidden;
-  background: #f1f5f9;
-}
-
-.modern-card .product-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
 }
 
 .modern-card:hover .product-img {
   transform: scale(1.1);
 }
 
-/* محتوى الكارد */
+/* حل مشكلة الصور: نستخدم aspect-ratio لضمان التناسق في كل الشاشات */
+.modern-card .product-img {
+  width: 100%;
+  aspect-ratio: 16 / 11; /* نسبة ذهبية تمنع التمدد */
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  background-color: #f1f5f9;
+}
+
+/* تنسيق محتوى الكارد */
 .modern-card .card-body {
   padding: 1.25rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
-.modern-card .card-title {
-  font-size: clamp(1rem, 2.5vw, 1.15rem);
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: var(--dark-navy);
-}
-
+/* حل مشكلة النصوص الطويلة */
 .modern-card .card-text {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -118,11 +105,18 @@ body {
   overflow: hidden;
   font-size: 0.85rem;
   color: #64748b;
-  min-height: 2.6rem;
-  margin-bottom: 1rem;
+  min-height: 2.5rem;
 }
 
-/* السعر */
+.modern-card .card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .price-tag {
   position: absolute;
   top: 12px;
@@ -135,10 +129,46 @@ body {
   border-radius: 14px;
   font-size: 0.95rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  z-index: 10;
+  z-index: 2;
 }
 
-/* --- الزر العائم للسلة --- */
+/* --- تنسيق النافذة السفلية (Bottom Sheet Modal) --- */
+.modal-dialog-bottom {
+  display: flex;
+  align-items: flex-end;
+  margin: 0 auto;
+  max-width: 500px;
+  min-height: 100vh;
+}
+
+.modal-content-round {
+  border-radius: 32px 32px 0 0 !important;
+  border: none;
+  max-height: 75vh;
+  overflow-y: auto;
+  background: #ffffff;
+  box-shadow: 0 -15px 50px -10px rgba(0, 0, 0, 0.1);
+}
+
+.pull-bar {
+  width: 45px;
+  height: 5px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  margin: 15px auto;
+}
+
+/* حركة الانزلاق */
+.modal.fade .modal-dialog-bottom {
+  transform: translateY(100%);
+  transition: transform 0.45s cubic-bezier(0.32, 1, 0.23, 1);
+}
+
+.modal.show .modal-dialog-bottom {
+  transform: translateY(0);
+}
+
+/* تنسيق الزر العائم */
 .fixed-cart-btn {
   position: fixed;
   bottom: 30px;
@@ -153,11 +183,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .fixed-cart-btn:hover {
   transform: scale(1.1) rotate(10deg);
+  background: #0056b3;
 }
 
 .cart-badge-floating {
@@ -175,34 +206,20 @@ body {
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* --- النافذة السفلية (Bottom Sheet) --- */
-.modal-dialog-bottom {
-  display: flex;
-  align-items: flex-end;
-  margin: 0 auto;
-  max-width: 500px;
-  min-height: 100vh;
+/* رتوش نهائية */
+.extra-small {
+  font-size: 0.75rem;
+  color: #94a3b8;
 }
 
-.modal-content-round {
-  border-radius: 32px 32px 0 0 !important;
-  border: none;
-  max-height: 75vh;
-  overflow-y: auto;
-  background: #ffffff;
+.pointer {
+  cursor: pointer;
 }
 
-.pull-bar {
-  width: 45px;
-  height: 5px;
-  background: #e2e8f0;
-  border-radius: 10px;
-  margin: 15px auto;
-}
-
-/* --- Responsive Fixes للجوال --- */
+/* --- دعم الشاشات الصغيرة (الجوال) --- */
 @media (max-width: 768px) {
   .modern-card {
     border-radius: 20px;
@@ -212,14 +229,14 @@ body {
     padding: 1rem;
   }
 
+  .modern-card .card-title {
+    font-size: 1rem;
+  }
+
   .fixed-cart-btn {
     width: 55px;
     height: 55px;
     bottom: 20px;
     left: 20px;
   }
-}
-
-.pointer {
-  cursor: pointer;
 }
